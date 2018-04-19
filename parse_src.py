@@ -5,29 +5,24 @@ from urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 import threading
 import common
+from bs4 import BeautifulSoup
 
 # 将列表页插入redis
 def parse(url, c, ts):
     d = pq(common.visit(url))
     src = d("video").find("source").attr("src")
-
-    m = d("#useraction .boxPart").html()
-    cn = re.search(u'时长:</span>(.*?)<span', m, re.S).group(1)
-    tc = "".join(cn.split())
-    t = tc.split(":")
-    times = 0
-    if len(t)  == 3:
-        times = int(t[1]) + 60
-    else:
-        times = int(t[0])
-    ts = int(ts)
-    if times < ts:
-        pass
-        #print( "时长不够不予处理")
-    elif src != None:
-        print( threading.current_thread().name,  " insert into redis ", src)
-        redisutil.add(src, common.KEY_SRC)
-        c.lrem(common.KEY, 1, url)
+    if src != None:
+        m = common.visit(url)
+        soup = BeautifulSoup(m, "lxml")
+        con = soup.find(name="div", attrs={"class": "boxPart"}).text
+        con = "".join(con.split())
+        t = con.split(":")
+        times = int(t[1])
+        ts = int(ts)
+        if times >= ts:
+            print( threading.current_thread().name,  " insert into redis ", src)
+            redisutil.add(src, common.KEY_SRC)
+            c.lrem(common.KEY, 1, url)
     else:
         print(threading.current_thread().name,  src, "解析为None, 插入 redis_error")
         redisutil.add(src, common.KEY_NONE)
