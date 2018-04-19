@@ -23,6 +23,8 @@ def parse(url, c, ts):
             print( threading.current_thread().name,  " insert into redis ", src)
             redisutil.add(src, common.KEY_SRC)
             c.lrem(common.KEY, 1, url)
+        else:
+            print(threading.current_thread().name,  src, "Not enough time")
     else:
         print(threading.current_thread().name,  src, "解析为None, 插入 redis_error")
         redisutil.add(src, common.KEY_NONE)
