@@ -3,6 +3,7 @@
 - 本程序获取所有视频url-
 - 然后将视频的下载地址保存到文件，每个文件1000个，可以直接拖到迅雷里下载，一晚上可以下载<label style="color:red"> 300~400GB </label> 没有任何问题
 - 可以输入指定的页码进行抓取
+- 可以输入指定的时长进行过滤
 
 # 安装
 - [python3](http://www.python.org)
@@ -10,20 +11,20 @@
 
 On Windows
 
-    redis-server.exe redis.window.conf    
+    redis-server.exe redis.window.conf
 
 Or on Unix-like OS
 
-    $ redis-server redis.conf 
+    $ redis-server redis.conf
 
 安装 requests, 快速获取html
 
-    $ pip install requests    
+    $ pip install requests
 
 
 # 启动
 
-    python run.py    
+    python run.py
 
 或者
 
