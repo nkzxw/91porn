@@ -17,7 +17,8 @@ def parse(url, c, ts):
         con = soup.find(name="div", attrs={"class": "boxPart"}).text
         con = "".join(con.split())
         t = con.split(":")
-        times = int(t[1])
+        times = t[2]
+        times = int(times[0:2])
         ts = int(ts)
         if times >= ts:
             print( threading.current_thread().name,  " insert into redis ", src)
