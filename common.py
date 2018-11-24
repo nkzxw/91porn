@@ -10,7 +10,7 @@ cookies.set("language", "cn_CN", domain=".91.91p17.space", path="/")
 #--------------------------------------
 # 91 的临时站点，可以随时更换
 #URL = "http://91porn.com/"
-URL = "http://91.91p17.space/"
+URL = "http://91.p02.space/"
 KEY = "91"
 KEY_SRC = "91_src" # 每个视频源url对于的redis key
 KEY_NONE = "91_none"
