@@ -3,16 +3,20 @@ import requests, re, redisutil, time, random, threading
 from urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 import common
+from bs4 import BeautifulSoup
 
 # 将列表页插入redis
 def parseList(url):
-    lst = re.compile(r'http:\/\/91\.91p17\.space\/view_video\.php\?viewkey\=\w+').findall(common.visit(url))
-    for a in set(lst):
-        if not redisutil.exists(a, common.KEY):
-            redisutil.add(a, common.KEY)
-            print(threading.current_thread().name, " insert into redis ", a)
+    #lst = re.compile(r'http:\/\/91\.91p17\.space\/view_video\.php\?viewkey\=\w+').findall(common.visit(url))
+    m = common.visit(url)
+    soup = BeautifulSoup(m, "lxml")
+    for url  in soup.find_all(name='a',attrs={"href":re.compile(r'^http:(.*)view_video(.*)')}):
+        lst = url.get('href')
+        if not redisutil.exists(lst, common.KEY):
+            redisutil.add(lst, common.KEY)
+            print(threading.current_thread().name, " insert into redis ", lst)
         else:
-            print(threading.current_thread().name, " redis 已经存在，不再访问 ", a)
+            print(threading.current_thread().name, " redis 已经存在，不再访问 ", lst)
 
 '''
     线程主方法
