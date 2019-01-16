@@ -9,8 +9,9 @@ from bs4 import BeautifulSoup
 def parseList(url):
     #lst = re.compile(r'http:\/\/91\.91p17\.space\/view_video\.php\?viewkey\=\w+').findall(common.visit(url))
     m = common.visit(url)
-    soup = BeautifulSoup(m, "lxml")
-    for url  in soup.find_all(name='a',attrs={"href":re.compile(r'^http:(.*)view_video(.*)')}):
+    soup = BeautifulSoup(m,'html.parser')
+    urls = soup.find_all(name='a',attrs={"href":re.compile(r'^http(.*)view_video(.*)')})
+    for url  in urls:
         lst = url.get('href')
         if not redisutil.exists(lst, common.KEY):
             redisutil.add(lst, common.KEY)
